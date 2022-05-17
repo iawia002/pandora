@@ -1,2 +1,3 @@
 # pandora
-Common libraries and examples for writing Go and Kubernetes services/applications.
+
+Code snippets and examples for writing Go/Kubernetes services/applications.
