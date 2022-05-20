@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"os"
 	"time"
 
@@ -12,6 +11,7 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
+	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
 	controllerruntime "github.com/iawia002/pandora/kubernetes/controller/example/controller-runtime"
 	samplecontroller "github.com/iawia002/pandora/kubernetes/controller/example/sample-controller"
@@ -65,7 +65,7 @@ func run(config *rest.Config) error {
 		return err
 	}
 
-	ctx := context.TODO()
+	ctx := signals.SetupSignalHandler()
 	informer.Start(ctx.Done())
 	return mgr.Start(ctx)
 }
