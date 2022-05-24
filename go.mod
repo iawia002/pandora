@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/urfave/cli/v2 v2.6.0
+	golang.org/x/exp v0.0.0-20220518171630-0b5c67f07fdf
 	k8s.io/api v0.24.0
 	k8s.io/apimachinery v0.24.0
 	k8s.io/client-go v0.24.0
