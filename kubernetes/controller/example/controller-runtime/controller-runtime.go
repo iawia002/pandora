@@ -3,13 +3,16 @@ package controllerruntime
 import (
 	"context"
 	"strings"
+	"time"
 
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 )
 
@@ -54,4 +57,24 @@ func (r *NodeReconciler) SetupWithManager(mgr ctrl.Manager) error {
 // nodeNameFilter is a custom example filter.
 func nodeNameFilter(object client.Object) bool {
 	return strings.Contains(object.GetName(), "cd")
+}
+
+// Timed task example
+
+// Check if our NodeReconciler implements necessary interfaces.
+var _ manager.Runnable = &NodeReconciler{}
+var _ manager.LeaderElectionRunnable = &NodeReconciler{}
+
+// NeedLeaderElection implements the LeaderElectionRunnable interface,
+// controllers need to be run in leader election mode.
+func (r *NodeReconciler) NeedLeaderElection() bool {
+	return true
+}
+
+func (r *NodeReconciler) Start(ctx context.Context) error {
+	go wait.Until(func() {
+		klog.Infof("current time: %s", time.Now().String())
+	}, time.Second*5, ctx.Done())
+
+	return nil
 }

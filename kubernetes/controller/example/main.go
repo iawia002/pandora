@@ -54,6 +54,10 @@ func run(config *rest.Config) error {
 	if err = nodeReconciler.SetupWithManager(mgr); err != nil {
 		return err
 	}
+	// Register timed tasker
+	if err = mgr.Add(nodeReconciler); err != nil {
+		return err
+	}
 
 	kubeClient, err := kubernetes.NewForConfig(config)
 	if err != nil {
