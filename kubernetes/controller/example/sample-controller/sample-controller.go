@@ -76,6 +76,16 @@ func (c *nodeController) Run(workers int, stopCh <-chan struct{}) error {
 	return nil
 }
 
+// Check if our nodeController implements necessary interfaces.
+var _ manager.Runnable = &nodeController{}
+var _ manager.LeaderElectionRunnable = &nodeController{}
+
+// NeedLeaderElection implements the LeaderElectionRunnable interface,
+// controllers need to be run in leader election mode.
+func (c *nodeController) NeedLeaderElection() bool {
+	return true
+}
+
 func (c *nodeController) Start(ctx context.Context) error {
 	return c.Run(2, ctx.Done())
 }
