@@ -7,8 +7,8 @@ import (
 
 	"github.com/urfave/cli/v2"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/client-go/tools/clientcmd"
 
+	"github.com/iawia002/pandora/kubernetes/client"
 	genericclient "github.com/iawia002/pandora/kubernetes/client/generic"
 )
 
@@ -21,7 +21,7 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			config, err := clientcmd.BuildConfigFromFlags("", c.String("kubeconfig"))
+			config, err := client.BuildConfigFromFlags("", c.String("kubeconfig"), client.SetQPS(100, 200))
 			if err != nil {
 				return err
 			}

@@ -10,8 +10,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/dynamic"
-	"k8s.io/client-go/tools/clientcmd"
 
+	"github.com/iawia002/pandora/kubernetes/client"
 	unstructuredutils "github.com/iawia002/pandora/kubernetes/unstructured"
 )
 
@@ -24,7 +24,7 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			config, err := clientcmd.BuildConfigFromFlags("", c.String("kubeconfig"))
+			config, err := client.BuildConfigFromFlags("", c.String("kubeconfig"), client.SetQPS(100, 200))
 			if err != nil {
 				return err
 			}
