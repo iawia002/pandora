@@ -14,6 +14,7 @@ func ConvertToUnstructured(obj interface{}) (*unstructured.Unstructured, error) 
 	return &unstructured.Unstructured{Object: uncastObj}, nil
 }
 
+//nolint:gofmt,goimports
 // ConvertToTyped converts an unstructured object to a typed object.
 // Usage:
 // 	node := &corev1.Node{}
