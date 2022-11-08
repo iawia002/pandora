@@ -71,6 +71,7 @@ func (r *NodeReconciler) NeedLeaderElection() bool {
 	return true
 }
 
+// Start starts the timed task.
 func (r *NodeReconciler) Start(ctx context.Context) error {
 	go wait.Until(func() {
 		klog.Infof("current time: %s", time.Now().String())

@@ -11,7 +11,7 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        go: ["1.19"]
+        go: ["1.18"]
         os: [ubuntu-latest, macOS-latest]
     name: Go ${{ matrix.go }} in ${{ matrix.os }}
     steps:
@@ -24,10 +24,7 @@ jobs:
         go version
         go env
     - name: Lint
-      uses: golangci/golangci-lint-action@v3
-      with:
-        version: v1.50
-        only-new-issues: true
+      run: make lint
     - name: Test
       run: make test
     - name: Code coverage
