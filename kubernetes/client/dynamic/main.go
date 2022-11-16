@@ -5,14 +5,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/iawia002/lia/kubernetes/client"
+	unstructuredutils "github.com/iawia002/lia/kubernetes/unstructured"
 	"github.com/urfave/cli/v2"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/dynamic"
-
-	"github.com/iawia002/pandora/kubernetes/client"
-	unstructuredutils "github.com/iawia002/pandora/kubernetes/unstructured"
 )
 
 func main() {

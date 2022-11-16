@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/iawia002/lia/kubernetes/controller"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -16,8 +17,6 @@ import (
 	"k8s.io/client-go/util/workqueue"
 	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
-
-	"github.com/iawia002/pandora/kubernetes/controller"
 )
 
 type nodeController struct {
