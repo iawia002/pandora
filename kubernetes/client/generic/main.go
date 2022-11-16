@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/iawia002/lia/kubernetes/client"
+	genericclient "github.com/iawia002/lia/kubernetes/client/generic"
 	"github.com/urfave/cli/v2"
 	corev1 "k8s.io/api/core/v1"
-
-	"github.com/iawia002/pandora/kubernetes/client"
-	genericclient "github.com/iawia002/pandora/kubernetes/client/generic"
 )
 
 func main() {

@@ -13,8 +13,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
-	controllerruntime "github.com/iawia002/pandora/kubernetes/controller/example/controller-runtime"
-	samplecontroller "github.com/iawia002/pandora/kubernetes/controller/example/sample-controller"
+	controllerruntime "github.com/iawia002/pandora/kubernetes/controller/controller-runtime"
+	samplecontroller "github.com/iawia002/pandora/kubernetes/controller/sample-controller"
 )
 
 func main() {
