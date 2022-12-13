@@ -4,12 +4,12 @@ import (
 	"os"
 	"time"
 
+	"github.com/iawia002/lia/kubernetes/client"
 	"github.com/urfave/cli/v2"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/clientcmd"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
@@ -26,7 +26,7 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			config, err := clientcmd.BuildConfigFromFlags("", c.String("kubeconfig"))
+			config, err := client.BuildConfigFromFlags("", c.String("kubeconfig"))
 			if err != nil {
 				return err
 			}
