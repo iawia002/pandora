@@ -10,6 +10,7 @@ import (
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
@@ -45,6 +46,7 @@ func run(config *rest.Config) error {
 		LeaderElection:          true,
 		LeaderElectionNamespace: metav1.NamespaceSystem,
 		LeaderElectionID:        "sample-controller-manager-leader-election",
+		Logger:                  klog.NewKlogr(),
 	})
 	if err != nil {
 		return err
