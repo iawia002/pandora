@@ -11,6 +11,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/klog/v2"
+	"k8s.io/utils/pointer"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
@@ -47,6 +48,7 @@ func run(config *rest.Config) error {
 		LeaderElectionNamespace: metav1.NamespaceSystem,
 		LeaderElectionID:        "sample-controller-manager-leader-election",
 		Logger:                  klog.NewKlogr(),
+		SyncPeriod:              pointer.Duration(time.Hour * 1),
 	})
 	if err != nil {
 		return err
