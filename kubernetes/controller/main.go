@@ -12,6 +12,7 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/klog/v2"
 	"k8s.io/utils/pointer"
+	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
@@ -49,8 +50,17 @@ func run(config *rest.Config) error {
 		LeaderElectionID:        "sample-controller-manager-leader-election",
 		Logger:                  klog.NewKlogr(),
 		SyncPeriod:              pointer.Duration(time.Hour * 1),
+		MetricsBindAddress:      ":8080",
+		HealthProbeBindAddress:  ":8081",
 	})
 	if err != nil {
+		return err
+	}
+
+	if err = mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
+		return err
+	}
+	if err = mgr.AddReadyzCheck("readyz", healthz.Ping); err != nil {
 		return err
 	}
 
