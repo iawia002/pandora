@@ -78,7 +78,11 @@ func run(config *rest.Config) error {
 		return err
 	}
 	informer := informers.NewSharedInformerFactory(kubeClient, time.Second*30)
-	nodeController := samplecontroller.NewController(informer.Core().V1().Nodes())
+
+	nodeController, err := samplecontroller.NewController(informer.Core().V1().Nodes())
+	if err != nil {
+		return err
+	}
 	if err = mgr.Add(nodeController); err != nil {
 		return err
 	}
