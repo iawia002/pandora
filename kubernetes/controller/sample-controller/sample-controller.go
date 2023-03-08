@@ -26,14 +26,14 @@ type nodeController struct {
 }
 
 // NewController returns a new sample controller.
-func NewController(nodeInformer coreinformers.NodeInformer) manager.Runnable {
+func NewController(nodeInformer coreinformers.NodeInformer) (manager.Runnable, error) {
 	c := &nodeController{
 		nodeLister: nodeInformer.Lister(),
 		nodeSynced: nodeInformer.Informer().HasSynced,
 		queue:      workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "sample"),
 	}
 
-	nodeInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
+	if _, err := nodeInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: c.enqueue,
 		UpdateFunc: func(oldObj, newObj interface{}) {
 			oldNode := oldObj.(*corev1.Node)
@@ -44,9 +44,11 @@ func NewController(nodeInformer coreinformers.NodeInformer) manager.Runnable {
 			c.enqueue(newObj)
 		},
 		DeleteFunc: c.enqueue,
-	})
+	}); err != nil {
+		return nil, err
+	}
 
-	return c
+	return c, nil
 }
 
 func (c *nodeController) Run(workers int, stopCh <-chan struct{}) error {
