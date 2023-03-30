@@ -1,7 +1,7 @@
 # pandora
 
-<a href="https://codecov.io/gh/iawia002/pandora">
-  <img src="https://img.shields.io/codecov/c/github/iawia002/pandora.svg?style=flat-square" alt="Codecov">
-</a>
+[![build](https://github.com/iawia002/pandora/actions/workflows/ci.yml/badge.svg)](https://github.com/iawia002/pandora/actions)
+[![codecov](https://codecov.io/gh/iawia002/pandora/branch/master/graph/badge.svg?token=A4NUL3A0P5)](https://codecov.io/gh/iawia002/pandora)
+[![Go Report Card](https://goreportcard.com/badge/github.com/iawia002/pandora)](https://goreportcard.com/report/github.com/iawia002/pandora)
 
 The Pandora's box: code snippets and examples for writing Go/Kubernetes services/applications. Pandora is built on top of [lia](https://github.com/iawia002/lia).
