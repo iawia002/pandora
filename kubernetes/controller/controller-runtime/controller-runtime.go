@@ -7,6 +7,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/client-go/tools/record"
 	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -16,9 +17,13 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 )
 
+const controllerName = "sample-controller"
+
 // NodeReconciler is a Reconciler for the Node object.
 type NodeReconciler struct {
 	client.Client
+
+	recorder record.EventRecorder
 }
 
 // Reconcile reconciles the Node object.
@@ -28,6 +33,7 @@ func (r *NodeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 	klog.Info(node.Name)
+	// r.recorder.Event(node, corev1.EventTypeNormal, "reason", "message")
 	return ctrl.Result{}, nil
 }
 
@@ -39,6 +45,8 @@ func (r *NodeReconciler) InjectClient(c client.Client) error {
 
 // SetupWithManager setups the NodeReconciler with manager.
 func (r *NodeReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	r.recorder = mgr.GetEventRecorderFor(controllerName)
+
 	return builder.
 		ControllerManagedBy(mgr).
 		For( // For is required, Owns and Watches are optional
@@ -51,6 +59,7 @@ func (r *NodeReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		WithOptions(controller.Options{
 			MaxConcurrentReconciles: 2,
 		}).
+		Named(controllerName).
 		Complete(r)
 }
 

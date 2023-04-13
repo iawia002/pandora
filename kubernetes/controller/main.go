@@ -18,6 +18,7 @@ import (
 
 	controllerruntime "github.com/iawia002/pandora/kubernetes/controller/controller-runtime"
 	samplecontroller "github.com/iawia002/pandora/kubernetes/controller/sample-controller"
+	"github.com/iawia002/pandora/kubernetes/scheme"
 )
 
 func main() {
@@ -45,6 +46,7 @@ func main() {
 
 func run(config *rest.Config) error {
 	mgr, err := manager.New(config, manager.Options{
+		Scheme:                  scheme.Scheme,
 		LeaderElection:          true,
 		LeaderElectionNamespace: metav1.NamespaceSystem,
 		LeaderElectionID:        "sample-controller-manager-leader-election",
@@ -79,7 +81,7 @@ func run(config *rest.Config) error {
 	}
 	informer := informers.NewSharedInformerFactory(kubeClient, time.Second*30)
 
-	nodeController, err := samplecontroller.NewController(informer.Core().V1().Nodes())
+	nodeController, err := samplecontroller.NewController(kubeClient, informer.Core().V1().Nodes())
 	if err != nil {
 		return err
 	}

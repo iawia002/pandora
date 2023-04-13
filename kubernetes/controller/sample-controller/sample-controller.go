@@ -12,25 +12,37 @@ import (
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/wait"
 	coreinformers "k8s.io/client-go/informers/core/v1"
+	"k8s.io/client-go/kubernetes"
+	typedcorev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	corelisters "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/tools/cache"
+	"k8s.io/client-go/tools/record"
 	"k8s.io/client-go/util/workqueue"
 	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
+
+	"github.com/iawia002/pandora/kubernetes/scheme"
 )
+
+const controllerName = "sample-controller"
 
 type nodeController struct {
 	nodeLister corelisters.NodeLister
 	nodeSynced cache.InformerSynced
 	queue      workqueue.RateLimitingInterface
+	recorder   record.EventRecorder
 }
 
 // NewController returns a new sample controller.
-func NewController(nodeInformer coreinformers.NodeInformer) (manager.Runnable, error) {
+func NewController(kubeClient kubernetes.Interface, nodeInformer coreinformers.NodeInformer) (manager.Runnable, error) {
+	eventBroadcaster := record.NewBroadcaster()
+	eventBroadcaster.StartRecordingToSink(&typedcorev1.EventSinkImpl{Interface: kubeClient.CoreV1().Events("")})
+
 	c := &nodeController{
 		nodeLister: nodeInformer.Lister(),
 		nodeSynced: nodeInformer.Informer().HasSynced,
-		queue:      workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "sample"),
+		queue:      workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), controllerName),
+		recorder:   eventBroadcaster.NewRecorder(scheme.Scheme, corev1.EventSource{Component: controllerName}),
 	}
 
 	if _, err := nodeInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
@@ -113,5 +125,6 @@ func (c *nodeController) syncHandler(key string) error {
 		return err
 	}
 	klog.Info(node.Name)
+	// c.recorder.Event(node, corev1.EventTypeNormal, "reason", "message")
 	return nil
 }
