@@ -6,6 +6,8 @@ import (
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/tools/record"
 	"k8s.io/klog/v2"
@@ -13,8 +15,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
+	"sigs.k8s.io/controller-runtime/pkg/event"
+	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
+	"sigs.k8s.io/controller-runtime/pkg/source"
 )
 
 const controllerName = "sample-controller"
@@ -54,6 +60,28 @@ func (r *NodeReconciler) SetupWithManager(mgr ctrl.Manager) error {
 			builder.WithPredicates(
 				predicate.NewPredicateFuncs(nodeNameFilter),
 				predicate.ResourceVersionChangedPredicate{},
+			),
+		).
+		Watches(
+			&source.Kind{Type: &corev1.Pod{}},
+			handler.EnqueueRequestsFromMapFunc(func(obj client.Object) []reconcile.Request {
+				pod := obj.(*corev1.Pod)
+				return []reconcile.Request{
+					{
+						NamespacedName: types.NamespacedName{
+							Name: pod.Spec.NodeName,
+						},
+					},
+				}
+			}),
+			builder.WithPredicates(
+				predicate.ResourceVersionChangedPredicate{},
+				predicate.Funcs{
+					CreateFunc: func(event event.CreateEvent) bool {
+						pod := event.Object.(*corev1.Pod)
+						return pod.Namespace == metav1.NamespaceSystem
+					},
+				},
 			),
 		).
 		WithOptions(controller.Options{
