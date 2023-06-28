@@ -42,6 +42,7 @@ const (
 
 // FooSpec ...
 type FooSpec struct {
+	// +kubebuilder:default=A
 	Type FooType `json:"type"`
 	// +kubebuilder:validation:MinLength=2
 	Key string `json:"key"`

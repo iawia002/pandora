@@ -48,6 +48,7 @@ spec:
                 minLength: 2
                 type: string
               type:
+                default: A
                 description: FooType ...
                 enum:
                 - A
