@@ -28,6 +28,11 @@ type Foo struct {
 	Status FooStatus `json:"status,omitempty"`
 }
 
+// +kubebuilder:webhook:path=/mutate-foo-example-io-v1alpha1-foo,mutating=true,failurePolicy=fail,sideEffects=None,groups=foo.example.io,resources=foos,verbs=create;update,versions=v1alpha1,name=foo.example.io,admissionReviewVersions=v1
+// +kubebuilder:webhook:path=/validate-foo-example-io-v1alpha1-foo,mutating=false,failurePolicy=fail,sideEffects=None,groups=foo.example.io,resources=foos,verbs=create;update,versions=v1alpha1,name=foo.example.io,admissionReviewVersions=v1
+
+// +kubebuilder:webhook:path=/mutate-v1-pod,mutating=true,failurePolicy=fail,sideEffects=None,groups="",resources=pods,verbs=create;update,versions=v1,name=mpod.kb.io,admissionReviewVersions=v1
+
 // +kubebuilder:validation:Enum=A;B
 
 // FooType ...
