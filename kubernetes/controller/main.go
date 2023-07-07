@@ -15,9 +15,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
+	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
+	foov1alpha1 "github.com/iawia002/pandora/kubernetes/apis/example/apis/foo/v1alpha1"
 	controllerruntime "github.com/iawia002/pandora/kubernetes/controller/controller-runtime"
 	samplecontroller "github.com/iawia002/pandora/kubernetes/controller/sample-controller"
+	controllerwebhook "github.com/iawia002/pandora/kubernetes/controller/webhook"
 	"github.com/iawia002/pandora/kubernetes/scheme"
 )
 
@@ -46,14 +49,17 @@ func main() {
 
 func run(config *rest.Config) error {
 	mgr, err := manager.New(config, manager.Options{
+		MetricsBindAddress:      ":8080",
+		HealthProbeBindAddress:  ":8081",
 		Scheme:                  scheme.Scheme,
 		LeaderElection:          true,
 		LeaderElectionNamespace: metav1.NamespaceSystem,
 		LeaderElectionID:        "sample-controller-manager-leader-election",
 		Logger:                  klog.NewKlogr(),
 		SyncPeriod:              pointer.Duration(time.Hour * 1),
-		MetricsBindAddress:      ":8080",
-		HealthProbeBindAddress:  ":8081",
+		// webhook config
+		Port:    8443,
+		CertDir: "./certs",
 	})
 	if err != nil {
 		return err
@@ -88,6 +94,12 @@ func run(config *rest.Config) error {
 	if err = mgr.Add(nodeController); err != nil {
 		return err
 	}
+
+	// Register webhooks
+	if err = (&foov1alpha1.Foo{}).SetupWebhookWithManager(mgr); err != nil {
+		return err
+	}
+	mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{Handler: &controllerwebhook.PodAnnotator{Client: mgr.GetClient()}})
 
 	ctx := signals.SetupSignalHandler()
 	informer.Start(ctx.Done())
