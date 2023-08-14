@@ -1,9 +1,9 @@
 module github.com/iawia002/pandora
 
-go 1.20
+go 1.21
 
 require (
-	github.com/iawia002/lia v0.1.0
+	github.com/iawia002/lia v0.2.0
 	github.com/urfave/cli/v2 v2.6.0
 	k8s.io/api v0.26.2
 	k8s.io/apiextensions-apiserver v0.26.2

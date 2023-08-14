@@ -8,7 +8,7 @@ lint: $(GOLANGCI_LINT)
 	@$(GOLANGCI_LINT) run
 
 $(GOLANGCI_LINT):
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(BIN_DIR) v1.51.2
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(BIN_DIR) v1.54.1
 
 test:
 	@go test ./... -coverprofile=coverage.out

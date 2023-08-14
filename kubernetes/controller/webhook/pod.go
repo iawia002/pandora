@@ -17,7 +17,7 @@ type PodAnnotator struct {
 }
 
 // Handle ...
-func (a *PodAnnotator) Handle(ctx context.Context, req admission.Request) admission.Response {
+func (a *PodAnnotator) Handle(_ context.Context, req admission.Request) admission.Response {
 	pod := &corev1.Pod{}
 	if err := a.decoder.Decode(req, pod); err != nil {
 		return admission.Errored(http.StatusBadRequest, err)
