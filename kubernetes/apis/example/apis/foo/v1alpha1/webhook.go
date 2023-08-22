@@ -7,6 +7,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
+	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
 // SetupWebhookWithManager ...
@@ -28,22 +29,22 @@ func (r *Foo) Default() {
 var _ webhook.Validator = &Foo{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *Foo) ValidateCreate() error {
+func (r *Foo) ValidateCreate() (admission.Warnings, error) {
 	return r.validateFoo()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *Foo) ValidateUpdate(_ runtime.Object) error {
+func (r *Foo) ValidateUpdate(_ runtime.Object) (admission.Warnings, error) {
 	return r.validateFoo()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *Foo) ValidateDelete() error {
+func (r *Foo) ValidateDelete() (admission.Warnings, error) {
 	// TODO: fill in your validation logic upon object deletion.
-	return nil
+	return nil, nil
 }
 
-func (r *Foo) validateFoo() error {
+func (r *Foo) validateFoo() (admission.Warnings, error) {
 	var allErrs field.ErrorList
 	if r.Spec.Type == "" && r.Spec.Key == "" {
 		allErrs = append(allErrs, field.Invalid(
@@ -54,7 +55,7 @@ func (r *Foo) validateFoo() error {
 	}
 
 	if len(allErrs) == 0 {
-		return nil
+		return nil, nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: GroupName, Kind: "Foo"}, r.Name, allErrs)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: GroupName, Kind: "Foo"}, r.Name, allErrs)
 }

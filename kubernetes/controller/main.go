@@ -12,7 +12,9 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/klog/v2"
 	"k8s.io/utils/pointer"
+	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -48,6 +50,9 @@ func main() {
 }
 
 func run(config *rest.Config) error {
+	logger := klog.NewKlogr()
+	log.SetLogger(logger)
+
 	mgr, err := manager.New(config, manager.Options{
 		MetricsBindAddress:      ":8080",
 		HealthProbeBindAddress:  ":8081",
@@ -55,11 +60,14 @@ func run(config *rest.Config) error {
 		LeaderElection:          true,
 		LeaderElectionNamespace: metav1.NamespaceSystem,
 		LeaderElectionID:        "sample-controller-manager-leader-election",
-		Logger:                  klog.NewKlogr(),
-		SyncPeriod:              pointer.Duration(time.Hour * 1),
-		// webhook config
-		Port:    8443,
-		CertDir: "./certs",
+		Logger:                  logger,
+		Cache: cache.Options{
+			SyncPeriod: pointer.Duration(time.Hour * 1),
+		},
+		WebhookServer: webhook.NewServer(webhook.Options{
+			Port:    8443,
+			CertDir: "./certs",
+		}),
 	})
 	if err != nil {
 		return err
