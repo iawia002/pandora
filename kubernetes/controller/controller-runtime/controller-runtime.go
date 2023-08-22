@@ -20,7 +20,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"sigs.k8s.io/controller-runtime/pkg/source"
 )
 
 const controllerName = "sample-controller"
@@ -43,14 +42,9 @@ func (r *NodeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	return ctrl.Result{}, nil
 }
 
-// InjectClient is used to inject the client into NodeReconciler.
-func (r *NodeReconciler) InjectClient(c client.Client) error {
-	r.Client = c
-	return nil
-}
-
 // SetupWithManager setups the NodeReconciler with manager.
 func (r *NodeReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	r.Client = mgr.GetClient()
 	r.recorder = mgr.GetEventRecorderFor(controllerName)
 
 	return builder.
@@ -63,8 +57,8 @@ func (r *NodeReconciler) SetupWithManager(mgr ctrl.Manager) error {
 			),
 		).
 		Watches(
-			&source.Kind{Type: &corev1.Pod{}},
-			handler.EnqueueRequestsFromMapFunc(func(obj client.Object) []reconcile.Request {
+			&corev1.Pod{},
+			handler.EnqueueRequestsFromMapFunc(func(ctx context.Context, obj client.Object) []reconcile.Request {
 				pod := obj.(*corev1.Pod)
 				return []reconcile.Request{
 					{
