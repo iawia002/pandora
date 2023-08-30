@@ -17,6 +17,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
+	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	foov1alpha1 "github.com/iawia002/pandora/kubernetes/apis/example/apis/foo/v1alpha1"
@@ -54,13 +55,15 @@ func run(config *rest.Config) error {
 	log.SetLogger(logger)
 
 	mgr, err := manager.New(config, manager.Options{
-		MetricsBindAddress:      ":8080",
-		HealthProbeBindAddress:  ":8081",
 		Scheme:                  scheme.Scheme,
 		LeaderElection:          true,
 		LeaderElectionNamespace: metav1.NamespaceSystem,
 		LeaderElectionID:        "sample-controller-manager-leader-election",
 		Logger:                  logger,
+		HealthProbeBindAddress:  ":8081",
+		Metrics: metricsserver.Options{
+			BindAddress: ":8080",
+		},
 		Cache: cache.Options{
 			SyncPeriod: pointer.Duration(time.Hour * 1),
 		},
