@@ -26,16 +26,20 @@ func SetupWebhookWithManager(mgr ctrl.Manager) error {
 type podAnnotator struct{}
 
 // Default ...
-func (a *podAnnotator) Default(_ context.Context, obj runtime.Object) error {
+func (a *podAnnotator) Default(ctx context.Context, obj runtime.Object) error {
 	pod, ok := obj.(*corev1.Pod)
 	if !ok {
 		return fmt.Errorf("expected a Pod but got a %T", obj)
+	}
+	req, err := admission.RequestFromContext(ctx)
+	if err != nil {
+		return err
 	}
 
 	if pod.Annotations == nil {
 		pod.Annotations = map[string]string{}
 	}
-	pod.Annotations["example-mutating-admission-webhook"] = "foo"
+	pod.Annotations["example-mutating-admission-webhook"] = req.UserInfo.Username
 	return nil
 }
 
