@@ -11,6 +11,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/dynamic"
 )
 
@@ -31,7 +32,11 @@ func main() {
 			if err != nil {
 				return err
 			}
-			objects, err := dynamicClient.Resource(corev1.SchemeGroupVersion.WithResource("nodes")).List(context.TODO(), metav1.ListOptions{})
+			objects, err := dynamicClient.Resource(corev1.SchemeGroupVersion.WithResource("nodes")).List(context.TODO(), metav1.ListOptions{
+				LabelSelector: labels.FormatLabels(map[string]string{
+					corev1.LabelOSStable: "linux",
+				}),
+			})
 			if err != nil {
 				return err
 			}

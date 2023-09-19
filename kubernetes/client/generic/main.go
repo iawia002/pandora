@@ -9,6 +9,7 @@ import (
 	genericclient "github.com/iawia002/lia/kubernetes/client/generic"
 	"github.com/urfave/cli/v2"
 	corev1 "k8s.io/api/core/v1"
+	runtimeclient "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func main() {
@@ -29,7 +30,9 @@ func main() {
 				return err
 			}
 			nodes := &corev1.NodeList{}
-			if err = client.List(context.TODO(), nodes); err != nil {
+			if err = client.List(context.TODO(), nodes, runtimeclient.MatchingLabels{
+				corev1.LabelOSStable: "linux",
+			}); err != nil {
 				return err
 			}
 			for _, node := range nodes.Items {
