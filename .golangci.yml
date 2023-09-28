@@ -1,5 +1,5 @@
 run:
-  deadline: 5m
+  timeout: 5m
   go: 1.21
 
 linters:
@@ -24,6 +24,5 @@ issues:
   - path: _test.go
     linters:
     - errcheck
-  - linters:
-    - revive
-    text: "package-comments: should have a package comment"
+  exclude:
+  - (comment on exported (method|function|type|const)|should have( a package)? comment|comment should be of the form)
