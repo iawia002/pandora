@@ -32,11 +32,7 @@ type NodeReconciler struct {
 }
 
 // Reconcile reconciles the Node object.
-func (r *NodeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	node := &corev1.Node{}
-	if err := r.Get(ctx, req.NamespacedName, node); err != nil {
-		return ctrl.Result{}, client.IgnoreNotFound(err)
-	}
+func (r *NodeReconciler) Reconcile(_ context.Context, node *corev1.Node) (ctrl.Result, error) {
 	klog.Info(node.Name)
 	// r.recorder.Event(node, corev1.EventTypeNormal, "reason", "message")
 	return ctrl.Result{}, nil
@@ -82,7 +78,7 @@ func (r *NodeReconciler) SetupWithManager(mgr ctrl.Manager) error {
 			MaxConcurrentReconciles: 2,
 		}).
 		Named(controllerName).
-		Complete(r)
+		Complete(reconcile.AsReconciler[*corev1.Node](r.Client, r))
 }
 
 // nodeNameFilter is a custom example filter.

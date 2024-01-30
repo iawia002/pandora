@@ -11,7 +11,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/klog/v2"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -65,7 +65,7 @@ func run(config *rest.Config) error {
 			BindAddress: ":8080",
 		},
 		Cache: cache.Options{
-			SyncPeriod: pointer.Duration(time.Hour * 1),
+			SyncPeriod: ptr.To(time.Hour * 1),
 		},
 		WebhookServer: webhook.NewServer(webhook.Options{
 			Port:    8443,
