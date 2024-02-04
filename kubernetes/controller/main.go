@@ -83,12 +83,7 @@ func run(config *rest.Config) error {
 		return err
 	}
 
-	nodeReconciler := &controllerruntime.NodeReconciler{}
-	if err = nodeReconciler.SetupWithManager(mgr); err != nil {
-		return err
-	}
-	// Register timed tasker
-	if err = mgr.Add(nodeReconciler); err != nil {
+	if err = (&controllerruntime.NodeReconciler{}).SetupWithManager(mgr); err != nil {
 		return err
 	}
 

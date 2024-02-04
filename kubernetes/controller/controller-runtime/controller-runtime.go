@@ -43,6 +43,11 @@ func (r *NodeReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	r.Client = mgr.GetClient()
 	r.recorder = mgr.GetEventRecorderFor(controllerName)
 
+	// Register timed tasker
+	if err := mgr.Add(r); err != nil {
+		return err
+	}
+
 	return builder.
 		ControllerManagedBy(mgr).
 		For( // For is required, Owns and Watches are optional
