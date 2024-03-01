@@ -3,7 +3,7 @@ module github.com/iawia002/pandora
 go 1.21
 
 require (
-	github.com/iawia002/lia v0.4.0
+	github.com/iawia002/lia v0.5.2-0.20240301014232-911a9620d00c
 	github.com/urfave/cli/v2 v2.6.0
 	k8s.io/api v0.29.0
 	k8s.io/apiextensions-apiserver v0.29.0

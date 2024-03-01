@@ -57,8 +57,8 @@ github.com/google/pprof v0.0.0-20210720184732-4bb14d4b1be1 h1:K6RDEckDVWvDI9JAJY
 github.com/google/pprof v0.0.0-20210720184732-4bb14d4b1be1/go.mod h1:kpwsk12EmLew5upagYY7GY0pfYCcupk39gWOCRROcvE=
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
-github.com/iawia002/lia v0.4.0 h1:LA61OMQcU5bCMvoZON/7xUEA2mNhiLLikvwsRtxNIm0=
-github.com/iawia002/lia v0.4.0/go.mod h1:aCx/Qj8zDVu8S0Y0Sk5GWjpWp3A9XBDFh+eJnZC6Cy4=
+github.com/iawia002/lia v0.5.2-0.20240301014232-911a9620d00c h1:BzV9YbhlXslljc0yKXs0P7CI+l2D4ptPMiVYH5OntVU=
+github.com/iawia002/lia v0.5.2-0.20240301014232-911a9620d00c/go.mod h1:celSe2BNtsjwx6dJyyAAGNaxwdY/keYB6tN7IcNvQKI=
 github.com/imdario/mergo v0.3.12 h1:b6R2BslTbIEToALKP7LxUvijTsNI9TAe80pLWN2g/HU=
 github.com/imdario/mergo v0.3.12/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
