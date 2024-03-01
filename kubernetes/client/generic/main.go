@@ -9,6 +9,7 @@ import (
 	genericclient "github.com/iawia002/lia/kubernetes/client/generic"
 	"github.com/urfave/cli/v2"
 	corev1 "k8s.io/api/core/v1"
+	"sigs.k8s.io/controller-runtime/pkg/cache"
 	runtimeclient "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -25,7 +26,24 @@ func main() {
 			if err != nil {
 				return err
 			}
-			client, err := genericclient.NewClient(config, genericclient.WithContext(context.TODO()))
+			client, err := genericclient.NewClient(config,
+				genericclient.WithContext(context.TODO()),
+				genericclient.WithByObject(map[runtimeclient.Object]cache.ByObject{
+					// store only metadata for Node objects
+					&corev1.Node{}: {
+						Transform: func(obj interface{}) (interface{}, error) {
+							n, ok := obj.(*corev1.Node)
+							if !ok {
+								return obj, nil
+							}
+							n.ObjectMeta.ManagedFields = nil
+							n.Spec = corev1.NodeSpec{}
+							n.Status = corev1.NodeStatus{}
+							return n, nil
+						},
+					},
+				}),
+			)
 			if err != nil {
 				return err
 			}
@@ -36,7 +54,7 @@ func main() {
 				return err
 			}
 			for _, node := range nodes.Items {
-				fmt.Println(node.Name)
+				fmt.Println(node)
 			}
 			return nil
 		},
