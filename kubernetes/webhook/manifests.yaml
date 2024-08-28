@@ -10,7 +10,7 @@ webhooks:
     service:
       name: webhook-service
       namespace: system
-      path: /mutate-foo-example-io-v1alpha1-foo
+      path: /mutate-foo-example-io-v1alpha2-foo
   failurePolicy: Fail
   name: foo.example.io
   rules:
@@ -56,7 +56,7 @@ webhooks:
     service:
       name: webhook-service
       namespace: system
-      path: /validate-foo-example-io-v1alpha1-foo
+      path: /validate-foo-example-io-v1alpha2-foo
   failurePolicy: Fail
   name: foo.example.io
   rules:

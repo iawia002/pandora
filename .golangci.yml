@@ -1,6 +1,6 @@
 run:
   timeout: 5m
-  go: 1.21
+  go: 1.22
 
 linters:
   enable:
@@ -10,8 +10,6 @@ linters:
   - goimports
   - misspell
   - unparam
-  disable:
-  - deadcode
 
 linter-settings:
   goconst:

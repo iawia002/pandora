@@ -6,6 +6,8 @@ import (
 	clientset "github.com/iawia002/pandora/kubernetes/generated/clientset"
 	foov1alpha1 "github.com/iawia002/pandora/kubernetes/generated/clientset/typed/foo/v1alpha1"
 	fakefoov1alpha1 "github.com/iawia002/pandora/kubernetes/generated/clientset/typed/foo/v1alpha1/fake"
+	foov1alpha2 "github.com/iawia002/pandora/kubernetes/generated/clientset/typed/foo/v1alpha2"
+	fakefoov1alpha2 "github.com/iawia002/pandora/kubernetes/generated/clientset/typed/foo/v1alpha2/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -15,8 +17,12 @@ import (
 
 // NewSimpleClientset returns a clientset that will respond with the provided objects.
 // It's backed by a very simple object tracker that processes creates, updates and deletions as-is,
-// without applying any validations and/or defaults. It shouldn't be considered a replacement
+// without applying any field management, validations and/or defaults. It shouldn't be considered a replacement
 // for a real clientset and is mostly useful in simple unit tests.
+//
+// DEPRECATED: NewClientset replaces this with support for field management, which significantly improves
+// server side apply testing. NewClientset is only available when apply configurations are generated (e.g.
+// via --with-applyconfig).
 func NewSimpleClientset(objects ...runtime.Object) *Clientset {
 	o := testing.NewObjectTracker(scheme, codecs.UniversalDecoder())
 	for _, obj := range objects {
@@ -66,4 +72,9 @@ var (
 // FooV1alpha1 retrieves the FooV1alpha1Client
 func (c *Clientset) FooV1alpha1() foov1alpha1.FooV1alpha1Interface {
 	return &fakefoov1alpha1.FakeFooV1alpha1{Fake: &c.Fake}
+}
+
+// FooV1alpha2 retrieves the FooV1alpha2Client
+func (c *Clientset) FooV1alpha2() foov1alpha2.FooV1alpha2Interface {
+	return &fakefoov1alpha2.FakeFooV1alpha2{Fake: &c.Fake}
 }

@@ -20,7 +20,6 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
-	foov1alpha1 "github.com/iawia002/pandora/kubernetes/apis/foo/v1alpha1"
 	controllerruntime "github.com/iawia002/pandora/kubernetes/controller/controller-runtime"
 	samplecontroller "github.com/iawia002/pandora/kubernetes/controller/sample-controller"
 	controllerwebhook "github.com/iawia002/pandora/kubernetes/controller/webhook"
@@ -102,10 +101,10 @@ func run(config *rest.Config) error {
 	}
 
 	// Register webhooks
-	if err = (&foov1alpha1.Foo{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = controllerwebhook.SetupFooWebhookWithManager(mgr); err != nil {
 		return err
 	}
-	if err = controllerwebhook.SetupWebhookWithManager(mgr); err != nil {
+	if err = controllerwebhook.SetupPodWebhookWithManager(mgr); err != nil {
 		return err
 	}
 

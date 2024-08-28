@@ -11,8 +11,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// SetupWebhookWithManager ...
-func SetupWebhookWithManager(mgr ctrl.Manager) error {
+// SetupPodWebhookWithManager ...
+func SetupPodWebhookWithManager(mgr ctrl.Manager) error {
 	return builder.WebhookManagedBy(mgr).
 		For(&corev1.Pod{}).
 		WithDefaulter(&podAnnotator{}).

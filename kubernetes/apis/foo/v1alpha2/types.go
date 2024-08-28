@@ -1,7 +1,8 @@
-package v1alpha1
+package v1alpha2
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 const (
@@ -12,6 +13,7 @@ const (
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +genclient:nonNamespaced
+// +kubebuilder:storageversion
 // +kubebuilder:resource:scope=Cluster,shortName="fo"
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Age",type=date,JSONPath=".metadata.creationTimestamp"
@@ -53,7 +55,7 @@ type FooSpec struct {
 type FooStatus struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +optional
-	Raw []byte `json:"raw,omitempty"`
+	Raw *runtime.RawExtension `json:"raw,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

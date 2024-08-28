@@ -4,6 +4,7 @@ package fake
 
 import (
 	foov1alpha1 "github.com/iawia002/pandora/kubernetes/apis/foo/v1alpha1"
+	foov1alpha2 "github.com/iawia002/pandora/kubernetes/apis/foo/v1alpha2"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -16,6 +17,7 @@ var codecs = serializer.NewCodecFactory(scheme)
 
 var localSchemeBuilder = runtime.SchemeBuilder{
 	foov1alpha1.AddToScheme,
+	foov1alpha2.AddToScheme,
 }
 
 // AddToScheme adds all types of this clientset into the given scheme. This allows composition
