@@ -5,7 +5,7 @@ package fake
 import (
 	"context"
 
-	v1alpha1 "github.com/iawia002/pandora/kubernetes/apis/foo/v1alpha1"
+	v1alpha2 "github.com/iawia002/pandora/kubernetes/apis/foo/v1alpha2"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	types "k8s.io/apimachinery/pkg/types"
@@ -15,27 +15,27 @@ import (
 
 // FakeFoos implements FooInterface
 type FakeFoos struct {
-	Fake *FakeFooV1alpha1
+	Fake *FakeFooV1alpha2
 }
 
-var foosResource = v1alpha1.SchemeGroupVersion.WithResource("foos")
+var foosResource = v1alpha2.SchemeGroupVersion.WithResource("foos")
 
-var foosKind = v1alpha1.SchemeGroupVersion.WithKind("Foo")
+var foosKind = v1alpha2.SchemeGroupVersion.WithKind("Foo")
 
 // Get takes name of the foo, and returns the corresponding foo object, and an error if there is any.
-func (c *FakeFoos) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Foo, err error) {
-	emptyResult := &v1alpha1.Foo{}
+func (c *FakeFoos) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Foo, err error) {
+	emptyResult := &v1alpha2.Foo{}
 	obj, err := c.Fake.
 		Invokes(testing.NewRootGetActionWithOptions(foosResource, name, options), emptyResult)
 	if obj == nil {
 		return emptyResult, err
 	}
-	return obj.(*v1alpha1.Foo), err
+	return obj.(*v1alpha2.Foo), err
 }
 
 // List takes label and field selectors, and returns the list of Foos that match those selectors.
-func (c *FakeFoos) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.FooList, err error) {
-	emptyResult := &v1alpha1.FooList{}
+func (c *FakeFoos) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.FooList, err error) {
+	emptyResult := &v1alpha2.FooList{}
 	obj, err := c.Fake.
 		Invokes(testing.NewRootListActionWithOptions(foosResource, foosKind, opts), emptyResult)
 	if obj == nil {
@@ -46,8 +46,8 @@ func (c *FakeFoos) List(ctx context.Context, opts v1.ListOptions) (result *v1alp
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &v1alpha1.FooList{ListMeta: obj.(*v1alpha1.FooList).ListMeta}
-	for _, item := range obj.(*v1alpha1.FooList).Items {
+	list := &v1alpha2.FooList{ListMeta: obj.(*v1alpha2.FooList).ListMeta}
+	for _, item := range obj.(*v1alpha2.FooList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -62,43 +62,43 @@ func (c *FakeFoos) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interf
 }
 
 // Create takes the representation of a foo and creates it.  Returns the server's representation of the foo, and an error, if there is any.
-func (c *FakeFoos) Create(ctx context.Context, foo *v1alpha1.Foo, opts v1.CreateOptions) (result *v1alpha1.Foo, err error) {
-	emptyResult := &v1alpha1.Foo{}
+func (c *FakeFoos) Create(ctx context.Context, foo *v1alpha2.Foo, opts v1.CreateOptions) (result *v1alpha2.Foo, err error) {
+	emptyResult := &v1alpha2.Foo{}
 	obj, err := c.Fake.
 		Invokes(testing.NewRootCreateActionWithOptions(foosResource, foo, opts), emptyResult)
 	if obj == nil {
 		return emptyResult, err
 	}
-	return obj.(*v1alpha1.Foo), err
+	return obj.(*v1alpha2.Foo), err
 }
 
 // Update takes the representation of a foo and updates it. Returns the server's representation of the foo, and an error, if there is any.
-func (c *FakeFoos) Update(ctx context.Context, foo *v1alpha1.Foo, opts v1.UpdateOptions) (result *v1alpha1.Foo, err error) {
-	emptyResult := &v1alpha1.Foo{}
+func (c *FakeFoos) Update(ctx context.Context, foo *v1alpha2.Foo, opts v1.UpdateOptions) (result *v1alpha2.Foo, err error) {
+	emptyResult := &v1alpha2.Foo{}
 	obj, err := c.Fake.
 		Invokes(testing.NewRootUpdateActionWithOptions(foosResource, foo, opts), emptyResult)
 	if obj == nil {
 		return emptyResult, err
 	}
-	return obj.(*v1alpha1.Foo), err
+	return obj.(*v1alpha2.Foo), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeFoos) UpdateStatus(ctx context.Context, foo *v1alpha1.Foo, opts v1.UpdateOptions) (result *v1alpha1.Foo, err error) {
-	emptyResult := &v1alpha1.Foo{}
+func (c *FakeFoos) UpdateStatus(ctx context.Context, foo *v1alpha2.Foo, opts v1.UpdateOptions) (result *v1alpha2.Foo, err error) {
+	emptyResult := &v1alpha2.Foo{}
 	obj, err := c.Fake.
 		Invokes(testing.NewRootUpdateSubresourceActionWithOptions(foosResource, "status", foo, opts), emptyResult)
 	if obj == nil {
 		return emptyResult, err
 	}
-	return obj.(*v1alpha1.Foo), err
+	return obj.(*v1alpha2.Foo), err
 }
 
 // Delete takes name of the foo and deletes it. Returns an error if one occurs.
 func (c *FakeFoos) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(foosResource, name, opts), &v1alpha1.Foo{})
+		Invokes(testing.NewRootDeleteActionWithOptions(foosResource, name, opts), &v1alpha2.Foo{})
 	return err
 }
 
@@ -106,17 +106,17 @@ func (c *FakeFoos) Delete(ctx context.Context, name string, opts v1.DeleteOption
 func (c *FakeFoos) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
 	action := testing.NewRootDeleteCollectionActionWithOptions(foosResource, opts, listOpts)
 
-	_, err := c.Fake.Invokes(action, &v1alpha1.FooList{})
+	_, err := c.Fake.Invokes(action, &v1alpha2.FooList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched foo.
-func (c *FakeFoos) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Foo, err error) {
-	emptyResult := &v1alpha1.Foo{}
+func (c *FakeFoos) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.Foo, err error) {
+	emptyResult := &v1alpha2.Foo{}
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceActionWithOptions(foosResource, name, pt, data, opts, subresources...), emptyResult)
 	if obj == nil {
 		return emptyResult, err
 	}
-	return obj.(*v1alpha1.Foo), err
+	return obj.(*v1alpha2.Foo), err
 }
